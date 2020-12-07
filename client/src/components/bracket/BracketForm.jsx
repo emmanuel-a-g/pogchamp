@@ -65,17 +65,21 @@ const BracketForm = ({ startTournament, registerTournament, registerOrStart }) =
     if (repeats.length === 1) {
       setRepeat("This player is already in the list!")
     } else {
-      axios.get(`/api/checkUser/?username=${incomingPlayer}`)
-        .then((data) => {
-          if (data.data === "") {
-            setRepeat("This player does not exist")
-          } else {
-            setRepeat("")
-            setPlayers({
-              participants: [...playersInTournament.participants, { name: incomingPlayer }],
-            });
-          }
-        })
+      // axios.get(`/api/checkUser/?username=${incomingPlayer}`)
+      //   .then((data) => {
+      //     if (data.data === "") {
+      //       setRepeat("This player does not exist")
+      //     } else {
+      //       setRepeat("")
+      //       setPlayers({
+      //         participants: [...playersInTournament.participants, { name: incomingPlayer }],
+      //       });
+      //     }
+      //   })
+      setRepeat("")
+      setPlayers({
+        participants: [...playersInTournament.participants, { name: incomingPlayer }],
+      });
     }
     playerName.current.value = "";
   };

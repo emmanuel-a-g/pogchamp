@@ -102,6 +102,7 @@ router.post('/postOneParticipant', (req, res) => {
 })
 
 router.post('/createTournament', (req, res) => {
+  console.log('Creating Tournament')
   let body = req.body.data;
   let obj = { "name": body.name, "description": body.description };
   // console.log(obj, 'THIS IS THE OBJJJJJJJ');
@@ -115,28 +116,28 @@ router.post('/createTournament', (req, res) => {
       live_image_urls= result.data.tournament.live_image_url;
       res.send(result.data);
     })
-    .then(() => {
-      req.body.form.name = body.name;
-      req.body.form.tournamentId = tournamentId;
-      req.body.form.Url = Url;
-      req.body.form.live_image_url = live_image_urls;
-      req.body.form.status = "pending";
+    // .then(() => {
+    //   req.body.form.name = body.name;
+    //   req.body.form.tournamentId = tournamentId;
+    //   req.body.form.Url = Url;
+    //   req.body.form.live_image_url = live_image_urls;
+    //   req.body.form.status = "pending";
 
-      insertTournamentInfo(req.body.form)
-        .then((res) => {
-          console.log('SEEDED TOURNAMENT')
-        })
-        .catch((err) => {
-          console.log("There was an error seeding");
-        })
-    })
+    //   insertTournamentInfo(req.body.form)
+    //     .then((res) => {
+    //       console.log('SEEDED TOURNAMENT')
+    //     })
+    //     .catch((err) => {
+    //       console.log("There was an error seeding");
+    //     })
+    // })
     .catch((error) => {
       console.log("Error creating new tournament", error)
     })
 })
 
 router.post('/startTournament', (req, res) => {
-  // console.log('Start tournament');
+  console.log('Start tournament');
   axios.post(`${baseUrl}/${req.body.tournamentId}/start.json?api_key=${api_key}`)
     .then((result) => {
       res.status(200).end();
@@ -156,7 +157,7 @@ router.post('/startTournament', (req, res) => {
 })
 
 router.post('/updateMatch', (req, res) => {
-  // console.log("Updating Winner");
+  console.log("Updating Winner");
   let { participant_id, tournament_id } = req.body;
   axios.get(`${baseUrl}/${tournament_id}/matches.json?api_key=${api_key}&state=open&participant_id=${participant_id}`)
   .then((result) => {
@@ -203,69 +204,73 @@ router.put('/finalizeTournament', (req, res) => {
 router.post('/declareWinner', (req, res) => {
   console.log(req.body, 'this is on declare winner');
   let { tournamentId, username, winnings } = req.body;
-  updateWinner(tournamentId, username, winnings)
-    .then((data) => {
-      res.send(data);
-    })
-    .then(() => {
-      updateTournamentStatus(tournamentId, "completed")
-        .then((data2) => {
-          console.log(data2);
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+  // updateWinner(tournamentId, username, winnings)
+  //   .then((data) => {
+  //     res.send(data);
+  //   })
+  //   .then(() => {
+  //     // updateTournamentStatus(tournamentId, "completed")
+  //     //   .then((data2) => {
+  //     //     console.log(data2);
+  //     //   })
+  //     //   .catch((err) => {
+  //     //     console.log(err);
+  //     //   })
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   })
 })
 //john keanu neo michael blue biden trump
 router.get('/top', (req, res) => {
+  console.log('Getting Top Earners, coming soon')
   let result = {};
-  topFiveEarners()
-    .then((data) => {
-      result.earners = data;
-      topFiveWinners()
-        .then((data2) => {
-          result.winners = data2;
-          topFiveRatio()
-            .then((data3) => {
-              result.ratio = data3;
-              res.send(result);
-            })
-        })
-    })
-    .catch((err) => {
-      console.log(err);
-    })
+  // topFiveEarners()
+  //   .then((data) => {
+  //     result.earners = data;
+  //     topFiveWinners()
+  //       .then((data2) => {
+  //         result.winners = data2;
+  //         topFiveRatio()
+  //           .then((data3) => {
+  //             result.ratio = data3;
+  //             res.send(result);
+  //           })
+  //       })
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   })
 })
 
 router.get('/checkUser', (req, res) => {
   let { username } = req.query;
-  findUserByName(username)
-    .then((data) => {
-      console.log(data);
-      res.send(data);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
+  // findUserByName(username)
+  //   .then((data) => {
+  //     console.log(data);
+  //     res.send(data);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   })
 })
 
 router.get('/openTournaments', (req, res) => {
-  findTournamentByStatus()
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
+  console.log('open tournaments?')
+  // findTournamentByStatus()
+  //   .then((data) => {
+  //     res.send(data);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   })
 })
 
 router.get('/organizerData', (req, res) => {
+  console.log('getting organizer data?')
   let { hostName } = req.query;
   let result = null;
+  return;
   findTournamentByHostName(hostName)
     .then((data) => {
       result = data;
@@ -304,15 +309,16 @@ router.get('/organizerData', (req, res) => {
 })
 
 router.get('/searchedOpen', (req, res) => {
+  console.log('getting searched open')
   let { search } = req.query;
 
-  findSearchedTournaments(search)
-  .then((data) => {
-    res.send(data);
-  })
-  .catch((err) => {
-    console.log(err);
-  })
+  // findSearchedTournaments(search)
+  // .then((data) => {
+  //   res.send(data);
+  // })
+  // .catch((err) => {
+  //   console.log(err);
+  // })
 })
 
 
